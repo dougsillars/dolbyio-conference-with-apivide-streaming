@@ -1,9 +1,7 @@
 // Set the consumerKey and consumerSecret variables
 // WARNING: It is best practice to use the VoxeetSDK.initializeToken function to initialize the SDK.
 // Please read the documentation at:
-// https://dolby.io/developers/interactivity-apis/client-sdk/initializing
-const consumerKey = "CONSUMER_KEY";
-const consumerSecret = "CONSUMER_SECRET";
+
 
 const logMessage = (message) => {
     console.log(`${new Date().toISOString()} - ${message}`);
@@ -546,8 +544,10 @@ $("#stop-recording-btn").click(() => {
 $("#start-rtmp-btn").click(() => {
     const rtmpUrl = $('#rtmp-url-input').val();
     logMessage(`Start RTMP stream to ${rtmpUrl}`);
-
-    const url = `https://session.voxeet.com/v1/api/conferences/mix/${conferenceId}/live/start`;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const access_token = urlParams.get('token');
+    const url = `https://session.voxeet.com/v2/conferences/mix/${conferenceId}/rtmp/start`;
     $.ajax({
         type: "POST",
         url: url,
@@ -555,8 +555,9 @@ $("#start-rtmp-btn").click(() => {
         dataType: 'json',
         data: JSON.stringify({ uri: rtmpUrl }),
         headers: {
-            "Authorization": "Basic: " + btoa(`${consumerKey}:${consumerSecret}`),
-            "Content-type": "application/json"
+            "Authorization": "Bearer: " + access_token,
+          //  "Content-type": "application/json",
+            "Access-Control-Allow-Origin":"*"
         }
     });
 
@@ -568,14 +569,17 @@ $("#start-rtmp-btn").click(() => {
 
 $("#stop-rtmp-btn").click(() => {
     logMessage('Stop the RTMP stream');
-
-    const url = `https://session.voxeet.com/v1/api/conferences/mix/${conferenceId}/live/stop`;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const access_token = urlParams.get('token');
+    const url = `https://session.voxeet.com/v2/conferences/mix/${conferenceId}/rtmp/stop`;
     $.ajax({
         type: "POST",
         url: url,
         headers: {
-            "Authorization": "Basic: " + btoa(`${consumerKey}:${consumerSecret}`),
-            "Content-type": "application/json"
+            "Authorization": "Bearer: " + access_token,
+            "Content-type": "application/json",
+            "Access-Control-Allow-Origin":"session.voxeet.com"
         }
     });
 
@@ -618,9 +622,12 @@ $('#send-invitation-btn').click(() => {
 
 
 $(function() {
-
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const access_token = urlParams.get('token');
+    var urlparam = 
     // Initialize the Voxeet SDK
-    VoxeetSDK.initialize(consumerKey, consumerSecret);
+    VoxeetSDK.initializeToken(access_token);
     logMessage("The Voxeet SDK has been initialized");
 
      // Generate a random username
