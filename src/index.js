@@ -44,6 +44,56 @@ app.get('/123', (req, res) => {
     });
 });
 
+app.post('/startrtmp', (req, res) => {
+    console.log("body", req.body);
+  //  bodyJson = JSON.parse(req.body);
+
+    var rtmpstreamURL = req.body.uri;
+    var apiUrl = req.body.apiUrl;
+    var rtmpOptions = {
+		method: 'POST',
+		url: apiUrl,
+		headers: {
+            'Content-Type': 'application/json',
+			'Authorization': "Basic " + btoa(encodeURI(dolbykey) + ":" + encodeURI(dolbysecret))	
+		},
+        body: JSON.stringify({"uri": rtmpstreamURL})
+	} 
+    console.log("rtmpstart options:", rtmpOptions);
+    request(rtmpOptions, function (error, response, rtmpbody) {
+		if (error) throw new Error(error);
+		console.log("body", rtmpbody);
+        bodyJson = JSON.parse(rtmpbody);
+        res.sendStatus(200);
+        
+    });   
+
+});
+
+app.post('/stoprtmp', (req, res) => {
+    console.log("body", req.body);
+  //  bodyJson = JSON.parse(req.body);
+
+    var rtmpstreamURL = req.body.uri;
+    var apiUrl = req.body.apiUrl;
+    var rtmpOptions = {
+		method: 'POST',
+		url: apiUrl,
+		headers: {
+            'Content-Type': 'application/json',
+			'Authorization': "Basic " + btoa(encodeURI(dolbykey) + ":" + encodeURI(dolbysecret))	
+		},
+	} 
+    console.log("rtmpstart options:", rtmpOptions);
+    request(rtmpOptions, function (error, response, rtmpbody) {
+		if (error) throw new Error(error);
+		console.log("body", rtmpbody);
+        bodyJson = JSON.parse(rtmpbody);
+        res.sendStatus(200);
+        
+    });   
+
+});
 
 //testing on 3027
 app.listen(3027, () =>

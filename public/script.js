@@ -544,16 +544,17 @@ $("#stop-recording-btn").click(() => {
 $("#start-rtmp-btn").click(() => {
     const rtmpUrl = $('#rtmp-url-input').val();
     logMessage(`Start RTMP stream to ${rtmpUrl}`);
+    logMessage(`Stream can be watched at https://embed.api.video/live/li1B0lff0Nltk1wz28FH3hV0`);
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const access_token = urlParams.get('token');
-    const url = `https://session.voxeet.com/v2/conferences/mix/${conferenceId}/rtmp/start`;
+    const url = `https://session.voxeet.com/v1/api/conferences/mix/${conferenceId}/live/start`;
     $.ajax({
         type: "POST",
-        url: url,
+        url: '/startrtmp',
         contentType: "application/json",
         dataType: 'json',
-        data: JSON.stringify({ uri: rtmpUrl }),
+        data: JSON.stringify({ "uri": rtmpUrl, "apiUrl": url }),
         headers: {
             "Authorization": "Bearer: " + access_token,
           //  "Content-type": "application/json",
@@ -572,15 +573,15 @@ $("#stop-rtmp-btn").click(() => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const access_token = urlParams.get('token');
-    const url = `https://session.voxeet.com/v2/conferences/mix/${conferenceId}/rtmp/stop`;
+    const url = `https://session.voxeet.com/v1/api/conferences/mix/${conferenceId}/live/stop`;
     $.ajax({
         type: "POST",
-        url: url,
+        url: '/stoprtmp',
         headers: {
-            "Authorization": "Bearer: " + access_token,
             "Content-type": "application/json",
-            "Access-Control-Allow-Origin":"session.voxeet.com"
-        }
+        },
+        dataType: 'json',
+        data: JSON.stringify({ "apiUrl": url }),
     });
 
     $('#rtmp-status').removeClass('red').addClass('gray');
