@@ -16,7 +16,7 @@ const dolbysecret = process.env.dolbysecret;
 
 
 
-app.get('/123', (req, res) => {
+app.get('/', (req, res) => {
     //authenticate with Dolby
     //first we must authenticate
 	var authOptions = {
@@ -39,7 +39,7 @@ app.get('/123', (req, res) => {
         bodyJson = JSON.parse(body);
         var authToken = bodyJson.access_token;
 		console.log("token ",authToken);
-        res.redirect("/index.html?token="+authToken);
+        res.redirect("/index1.html?token="+authToken);
       //  res.sendFile(path.join(__dirname, '../public', 'index.html'));  
     });
 });
