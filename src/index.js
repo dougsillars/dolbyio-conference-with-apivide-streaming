@@ -91,10 +91,7 @@ app.post('/stoprtmp', (req, res) => {
         bodyJson = JSON.parse(rtmpbody);
         res.sendStatus(200);
         
-    });   
-
-
-    
+    });       
 });
 
 //testing on 3027
