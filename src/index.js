@@ -23,6 +23,7 @@ app.get('/', (req, res) => {
 		method: 'POST',
 		url: 'https://session.voxeet.com/v1/oauth2/token',
 		headers: {
+      //heroku does not like the btoa
 	//		'Authorization': "Basic " + btoa(encodeURI(dolbykey) + ":" + encodeURI(dolbysecret))
   'Authorization': "Basic " + Buffer.from(encodeURI(dolbykey) + ":" + encodeURI(dolbysecret)).toString('base64')
 		},
@@ -55,7 +56,7 @@ app.post('/startrtmp', (req, res) => {
 		url: apiUrl,
 		headers: {
             'Content-Type': 'application/json',
-			'Authorization': "Basic " + btoa(encodeURI(dolbykey) + ":" + encodeURI(dolbysecret))	
+			'Authorization': "Basic " + Buffer.from(encodeURI(dolbykey) + ":" + encodeURI(dolbysecret)).toString('base64')	
 		},
         body: JSON.stringify({"uri": rtmpstreamURL})
 	} 
@@ -81,7 +82,7 @@ app.post('/stoprtmp', (req, res) => {
 		url: apiUrl,
 		headers: {
             'Content-Type': 'application/json',
-			'Authorization': "Basic " + btoa(encodeURI(dolbykey) + ":" + encodeURI(dolbysecret))	
+			'Authorization': "Basic " + Buffer.from(encodeURI(dolbykey) + ":" + encodeURI(dolbysecret)).toString('base64')
 		},
 	} 
     console.log("rtmpstart options:", rtmpOptions);
