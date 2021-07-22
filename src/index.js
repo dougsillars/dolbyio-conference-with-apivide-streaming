@@ -96,6 +96,6 @@ app.post('/stoprtmp', (req, res) => {
 
 
 //testing on 3027
-app.listen(3027, () =>
+app.listen(process.env.PORT || 3027, () =>
   console.log('Example app listening on port 3027!'),
 );
