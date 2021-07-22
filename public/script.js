@@ -71,7 +71,7 @@ $("#connect-btn").click(() => {
         $('#username-input').attr('readonly', true);
       })
       .then(() => logMessage(`You are connected as ${username}`))
-      .catch((e) => logMessage(e));
+      .catch((e) => logMessage("not connected" + e));
 });
 
 $("#conference-join-btn").click(() => {
