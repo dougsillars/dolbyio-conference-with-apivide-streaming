@@ -23,8 +23,8 @@ app.get('/', (req, res) => {
 		method: 'POST',
 		url: 'https://session.voxeet.com/v1/oauth2/token',
 		headers: {
-			'Authorization': "Basic " + btoa(encodeURI(dolbykey) + ":" + encodeURI(dolbysecret))
-			
+	//		'Authorization': "Basic " + btoa(encodeURI(dolbykey) + ":" + encodeURI(dolbysecret))
+  'Authorization': "Basic " + Buffer.from(encodeURI(dolbykey) + ":" + encodeURI(dolbysecret)).toString('base64')
 		},
         data: {
           grant_type: 'client_credentials'
