@@ -76,7 +76,11 @@ $("#connect-btn").click(() => {
 
 $("#conference-join-btn").click(() => {
     const liveRecording = $('#chk-live-recording')[0].checked;
+    const liveStreaming = $('#chk-live-stream')[0].checked;
 
+    
+
+    console.log("liverecording",liveRecording);
     // Default conference parameters
     // See: https://dolby.io/developers/interactivity-apis/client-sdk/reference-javascript/model/conferenceparameters
     let conferenceParams = {
@@ -194,6 +198,11 @@ $("#conference-join-btn").click(() => {
 
                     $('#send-message-btn').attr('disabled', false);
                     $('#send-invitation-btn').attr('disabled', false);
+                    //start the livestream
+                    if(liveStreaming){
+                        startRtmp();
+                    }
+
                 })
                 .catch((err) => logMessage(err));
       })
@@ -507,21 +516,43 @@ const addVideoPlayer = (videoUrl) => {
 
 
 
+/**
+ * RECORDING
+ */
+
+ const setRecordingState = (isRecording) => {
+    if (isRecording) {
+        $('#recording-status')
+            .removeClass('fa-stop-circle').addClass('fa-circle')
+            .removeClass('gray').addClass('red');
+    } else {
+        $('#recording-status')
+            .removeClass('fa-circle').addClass('fa-stop-circle')
+            .removeClass('red').addClass('gray');
+    }
+
+    $("#start-recording-btn").attr('disabled', isRecording);
+    $("#stop-recording-btn").attr('disabled', !isRecording);
+};
+
+
+
 $("#start-recording-btn").click(() => {
     logMessage('VoxeetSDK.recording.start()');
-
     // Start recording the conference
     VoxeetSDK.recording.start()
-        .then(() => {
-            $('#recording-status')
-                .removeClass('fa-stop-circle').addClass('fa-circle')
-                .removeClass('gray').addClass('red');
+    .then(() => {
+        $('#recording-status')
+            .removeClass('fa-stop-circle').addClass('fa-circle')
+            .removeClass('gray').addClass('red');
 
-            $("#start-recording-btn").attr('disabled', true);
-            $("#stop-recording-btn").attr('disabled', false);
-        })
-        .catch((err) => logMessage(err));
+        $("#start-recording-btn").attr('disabled', true);
+        $("#stop-recording-btn").attr('disabled', false);
+    })
+    .then(() => setRecordingState(true))
+    .catch((err) => logMessage(err));
 });
+
 
 $("#stop-recording-btn").click(() => {
     logMessage('VoxeetSDK.recording.stop()');
@@ -536,12 +567,20 @@ $("#stop-recording-btn").click(() => {
             $("#start-recording-btn").attr('disabled', false);
             $("#stop-recording-btn").attr('disabled', true);
         })
+        .then(() => setRecordingState(false))
         .catch((err) => logMessage(err));
+
 });
 
 
 
 $("#start-rtmp-btn").click(() => {
+    //abstracting as a function to reuse on startup
+   startRtmp();
+});
+
+function startRtmp(){
+
     const rtmpUrl = $('#rtmp-url-input').val();
     logMessage(`Start RTMP stream to ${rtmpUrl}`);
     logMessage(`Stream can be watched at https://embed.api.video/live/li1B0lff0Nltk1wz28FH3hV0`);
@@ -566,7 +605,9 @@ $("#start-rtmp-btn").click(() => {
     $("#rtmp-url-input").attr('readonly', true);
     $("#start-rtmp-btn").attr('disabled', true);
     $("#stop-rtmp-btn").attr('disabled', false);
-});
+
+
+}
 
 $("#stop-rtmp-btn").click(() => {
     logMessage('Stop the RTMP stream');
